@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrated Canvases</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000000;
+        }
+
+        canvas {
+            border: 2px solid #333;
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <canvas id="myCanvas" width="800" height="600"></canvas>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('myCanvas');
+            const ctx = canvas.getContext('2d');
+            const canvasWidth = canvas.width;
+            const canvasHeight = canvas.height;
+            let mousePositions = [];
+
+            canvas.addEventListener('mousemove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                mousePositions.push({ x: mouseX, y: mouseY });
+            });
+
+            function gameLoop() {
+                ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+                // Draw the shooting star path
+                for (let i = 1; i < mousePositions.length; i++) {
+                    const start = mousePositions[i - 1];
+                    const end = mousePositions[i];
+                    const distance = Math.sqrt((end.x - start.x) ** 2 + (end.y - start.y) ** 2);
+                    const steps = Math.ceil(distance / 10); // Adjust the step size for smoother path
+                    for (let j = 0; j <= steps; j++) {
+                        const x = start.x + (end.x - start.x) * (j / steps);
+                        const y = start.y + (end.y - start.y) * (j / steps);
+                        const timeElapsed = mousePositions.length - i; // Calculate time elapsed
+                        const radius = 5 - timeElapsed / 50; // Decrease radius gradually
+                        const alpha = 1 - timeElapsed / 100; // Decrease opacity gradually
+                        if (alpha <= 0) break; // Stop drawing if opacity becomes zero
+                        ctx.beginPath();
+                        ctx.arc(x, y, radius, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(0, 128, 0, ${alpha})`; // Green with decreasing opacity
+                        ctx.fill();
+                    }
+                }
+
+                // Draw concentric squares
+                const centerX = canvasWidth / 2;
+                const centerY = canvasHeight / 2;
+                let size = 300; // Adjust the initial size to make squares bigger
+                let spacing = 50; // Adjust the spacing between squares
+                for (let i = 0; i < 3; i++) {
+                    ctx.lineWidth = i + 1; // Varying line thickness
+                    // Adjusting the starting position to ensure squares are fully drawn within canvas
+                    const startX = centerX - size / 2 + ctx.lineWidth / 2;
+                    const startY = centerY - size / 2 + ctx.lineWidth / 2;
+                    ctx.strokeRect(startX, startY, size - ctx.lineWidth, size - ctx.lineWidth);
+                    size += spacing; // Increase size for the next square
+                    spacing += 10; // Increase spacing between squares
+                }
+
+                // Create a maze-like pattern by randomly removing walls
+                for (let i = 0; i < 10; i++) {
+                    const x = Math.floor(Math.random() * canvasWidth);
+                    const y = Math.floor(Math.random() * canvasHeight);
+                    ctx.clearRect(x, y, 0, 20); // Remove a larger square (wall)
+                }
+
+                requestAnimationFrame(gameLoop);
+            }
+
+            function clearMousePositions() {
+                mousePositions = [];
+            }
+
+            setInterval(clearMousePositions, 1000); // Clear mouse positions every 1000ms (1 second)
+
+            gameLoop(); // Start the game loop
+        });
+    </script>
+</body>
+</html>

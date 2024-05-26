@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-H31M2BE30M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-H31M2BE30M');
+</script>  
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mouse Click Check:Track Your Clicks Per Second with graph /for Left and right button\CPS checker online</title>
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1c1b1b;
+    color: #333;
+    text-align: center;
+    padding: 20px;
+}
+
+#clickChartContainer {
+    max-width: 60%;
+    margin: auto;
+    background: #f0eaea;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    background: linear-gradient(to bottom right, #eef4f5, #ebfbfb);
+    text-align: center;
+}
+
+h1 {
+    color: #313631;
+    animation: fadeIn 1s ease-in-out;
+}
+
+p,
+select,
+button {
+    font-size: 18px;
+    margin: 10px 0;
+}
+  P{
+    color:#1c1b1b;
+  }
+
+select,
+button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+select {
+    background-color: #ddd;
+    color: #333;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#clickButton {
+    padding: 60px 150px; /* Adjust padding as needed */
+    font-size: 24px;
+    background-color: #1e2020eb;
+    color: rgb(255, 255, 255);
+    border: none;
+    position: relative;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    width: 200px; /* Fixed width */
+    height: 80px; /* Fixed height */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center horizontally */
+}
+
+#clickText {
+    vertical-align: middle; /* Center vertically */
+}
+
+#clickButton.clicked span {
+    display: none;
+}
+
+.bubble {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.4);
+    animation: bubble 0.5s ease-out forwards;
+}
+
+@keyframes bubble {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(5);
+        opacity: 0;
+    }
+}
+
+#clickButton:active {
+    transform: scale(0.95);
+}
+
+
+#clickText {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#clickButton:active {
+    transform: scale(0.95);
+}
+
+#progressBarContainer {
+    width: 100%;
+    height: 20px;
+    background-color: #ddd;
+    border-radius: 5px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+#progressBar {
+    width: 100%;
+    height: 20px;
+    background-color: #4CAF50;
+    border-radius: 5px;
+    transition: width 0.01s linear, background-color 0.5s ease;
+}
+
+#againButton {
+    display: none;
+    margin-top: 20px;
+    background-color: #f82500;
+    color: white;
+}
+
+#againButton:hover {
+    background-color: #99a0a8;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+#clickCounter {
+    font-size: 24px;
+    margin-top: 10px;
+    transition: font-size 0.2s ease-in-out, transform 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+#resultMessage {
+    font-size: 36px;
+    color: #5a8082;
+    display: none;
+}
+
+#highestScore {
+    font-size: 20px;
+    margin-top: 10px;
+    color: #5a8082;
+}
+
+.newRecord {
+    font-weight: bold;
+    color: #4CAF50;
+}
+.right-click-icon {
+            width: 24px; /* Adjust width as needed */
+            height: 24px; /* Adjust height as needed */
+            margin-left: 70%;
+            cursor: pointer; /* Add cursor pointer */
+            cursor: pointer;
+            text-align: center;
+            color: #ffffff;
+            font-size: 16px; /* Adjust font size as needed */
+            padding: 8px 16px; /* Adjust padding as needed */
+            border: 2px solid black;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            display: inline-block; /* Ensures button width fits content */
+            line-height: 1; /* Reset line height */
+            background-color: transparent; /* Reset background color */
+            text-decoration: none; /* Reset text decoration */
+        }
+          .right-click-icon:hover {
+            background-color: #bfdb9f;
+            color: #fff;
+        }
+        .mouse {
+    width: 40px; /* Adjust width as needed */
+    height: 40px; /* Adjust height as needed */
+    border-radius: 50%; /* Makes the element round */
+    /* Optional: Add border, background, etc. */
+    background-color: #f3f1f1; /* Example background color */
+    display: inline-block; /* Ensures the element maintains its shape if not a block-level element */
+}
+.mouse1 {
+    position: fixed;
+    top: 20px; /* Adjust the distance from the top as needed */
+    left: 20px; /* Adjust the distance from the left as needed */
+    cursor: pointer;
+    text-align: center;
+    color: #ffffff;
+    font-size: 16px; /* Adjust font size as needed */
+    transition: all 0.3s ease;
+    display: inline-block; /* Ensures button width fits content */
+    line-height: 1; /* Reset line height */
+    background-color: transparent; /* Reset background color */
+    text-decoration: none; /* Reset text decoration */
+}
+        .mouse1:hover {
+            background-color: #167b0d;
+            color: #fff;
+        }
+
+        .blog {
+    position: fixed;
+    margin-top: 7%;
+    top: 20px; /* Adjust the distance from the top as needed */
+    left: 20px; /* Adjust the distance from the left as needed */
+    cursor: pointer;
+    text-align: center;
+    color: #ffffff;
+    font-size: 16px; /* Adjust font size as needed */
+    transition: all 0.3s ease;
+    display: inline-block; /* Ensures button width fits content */
+    line-height: 1; /* Reset line height */
+    background-color: transparent; /* Reset background color */
+    text-decoration: none; /* Reset text decoration */
+}
+        .blog:hover {
+            background-color: #134a89;
+            color: #fff;
+        }
+.contact-me {
+    position: fixed;
+    margin-top: 14%;
+    top: 20px; /* Adjust the distance from the top as needed */
+    left: 20px; /* Adjust the distance from the left as needed */
+    cursor: pointer;
+    text-align: center;
+    color: #ffffff;
+    font-size: 16px; /* Adjust font size as needed */
+    transition: all 0.3s ease;
+    display: inline-block; /* Ensures button width fits content */
+    line-height: 1; /* Reset line height */
+    background-color: transparent; /* Reset background color */
+    text-decoration: none; /* Reset text decoration */
+}
+        .contact-me:hover {
+            background-color: #767c24;
+            color: #fff;
+        }
+
+
+    #clickChartContainer h1 {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    text-decoration: underline; /* Adds underline to the text */
+    color: #323732;
+}
+#controlPanel {
+    text-align: center; /* Optional: centers items horizontally within the container */
+}
+
+#controlPanel button, #controlPanel img {
+    display: inline-block;
+    vertical-align: middle; /* Aligns items vertically in the center */
+    margin: 5px; /* Optional: adds space around items */
+}
+
+#controlPanel img {
+    cursor: pointer; /* Changes cursor to pointer when hovering over the image */
+}
+.vertical-line {
+    position: absolute; /* Set position to absolute */
+    top: 0; /* Align the line to the top of its container */
+    margin-left: 14%; /* Center the line horizontally and move it 1px to the left */
+    width: 5px; /* Adjust the width of the line */
+    height: 138%; /* Make the line height equal to the height of its container */
+    background-color: rgb(209, 209, 209); /* Adjust the color of the line */
+}
+
+
+.vertical-line::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0; /* Adjust the left position to start from the left edge of the container */
+    transform: translateY(-50%); /* Center the line vertically */
+    width: 100%; /* Make the line width equal to the width of its container */
+    height: 2px; /* Adjust the height of the line */
+    background-color: #ffffff; /* Adjust the color of the line */
+}
+.horizontal-line {
+    position: absolute; /* Set position to absolute */
+    margin-top: 0.5%;
+    left: 0%; /* Align the line to the center horizontally */ 
+    width: 3.3cm; /* Adjust the width of the line */
+    height: 2px; /* Adjust the height of the line */
+    background-color: gray; /* Adjust the color of the line */
+    top: 5%; /* Adjust the distance from the top as needed */
+}
+
+.horizontal-line:nth-of-type(2) {
+    top: 20%; /* Adjust the distance from the top for the second line */
+}
+.horizontal-line1 {
+    position: absolute; /* Set position to absolute */
+    margin-top: 6.8%;
+    left: 0%; /* Align the line to the center horizontally */ 
+    width: 3.3cm; /* Adjust the width of the line */
+    height: 2px; /* Adjust the height of the line */
+    background-color: gray; /* Adjust the color of the line */
+    top: 5%; /* Adjust the distance from the top as needed */
+}
+
+.horizontal-line2 {
+    position: absolute; /* Set position to absolute */
+    margin-top: 13.8%;
+    left: 0%; /* Align the line to the center horizontally */ 
+    width: 3.3cm; /* Adjust the width of the line */
+    height: 2px; /* Adjust the height of the line */
+    background-color: gray; /* Adjust the color of the line */
+    top: 5%; /* Adjust the distance from the top as needed */
+}
+
+</style>
+</head>
+<body onload="initializeTracking()">
+
+    <div id="clickChartContainer">
+         <div id="clickChartContainer">
+            <h1>Mouse Click Tracker <img src="mouse.png" alt="mouse" class="mouse" >
+            </h1>
+        </div>
+       
+       
+        
+        <p>First set time between 1, 5, 10, 20, or 60 seconds:</p>
+        <div id="controlPanel">
+        <select id="timeInterval">
+            <option value="1">1 second</option>
+            <option value="5" selected>5 seconds</option>
+            <option value="10">10 seconds</option>
+            <option value="20">20 seconds</option>
+            <option value="60">60 seconds</option>
+        </select>
+        
+            <button onclick="initializeTracking()">➊ Set / Reset</button>　 Right Button ➡
+            <img src="right.png" alt="Right Click" class="right-click-icon" title="Click it" onclick="redirectToAnotherPage()">
+        </div>
+        <p id="clickCounter">CPS: 0</p>
+        <div id="progressBarContainer">
+            <div id="progressBar"></div>
+        </div>
+        <p id="timeLeft"></p>
+        <button id="againButton" onclick="initializeTracking()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                <path d="M2.5 9a4.502 4.502 0 0 1 8.498-2.405.5.5 0 0 0 .495-.868A5.502 5.502 0 0 0 1 9.5c0 1.202.388 2.314 1.048 3.226a.5.5 0 0 0 .833-.554A3.501 3.501 0 0 1 2.5 9z"/>
+                <path fill-rule="evenodd" d="M10.354 5.354a.5.5 0 0 0-.708-.708L7.5 7.793V4.5a.5.5 0 0 0-1 0v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 0-1h-3.293l2.146-2.146a.5.5 0 0 0 0-.708z"/>
+            </svg>
+            Restart
+        </button>
+         <button id="clickButton"><span id="clickText">❷ClickHere </span></button>
+        </button>
+
+        <p id="resultMessage"></p>
+        <canvas id="clickChart" width="50" height="25"></canvas>
+        <p id="highestScore">Highest Score: 0</p>
+    </div>
+    <div class="vertical-line"></div>
+        <!-- Other content here -->
+        <div class="horizontal-line"></div>
+        <div class="horizontal-line1"></div>
+        <div class="horizontal-line2"></div>
+        <!-- Other content here -->
+    
+    <p class="mouse1" onclick="redirectToAnotherPage3()">mouse tracker</p>
+    <p class="blog" onclick="redirectToAnotherPage1()">Blogs</p>
+    <p class="contact-me" onclick="redirectToAnotherPage2()">Contact me</p>
+     <p>the CPS Mouse Click Tracker, your ultimate tool for mastering Clicks Per Second (CPS) effortlessly. With a simple and accessible interface, this tracker empowers you to monitor your CPS in real-time with just a few clicks.
+        No more complex setups or confusing interfaces – the CPS Mouse Click Tracker offers clear, actionable data right at your fingertips. Whether you're a casual gamer or a competitive pro, tracking your progress is now easier than ever.    
+        But that's not all – we've also added left and right click tracking features, so you can monitor both your clicking speed and accuracy across all types of clicks.</p>
+  
+    
+    <script>
+        let clickCount = 0;
+        let interval;
+        let timeLeft;
+        let clickTimes = [];
+        let startTime;
+        let chart;
+        let timerStarted = false;
+
+        function redirectToAnotherPage() {
+            // Replace 'another-page.html' with the path to the HTML page you want to navigate to
+            window.location.href = 'right.html';
+        }
+       function redirectToAnotherPage1() {
+            // Replace 'another-page.html' with the path to the HTML page you want to navigate to
+            window.location.href = 'aboutCPSsuiminkiArtical.html';
+        }
+        function redirectToAnotherPage2() {
+            // Replace 'another-page.html' with the path to the HTML page you want to navigate to
+            window.location.href = 'contact.html';
+        }
+        function redirectToAnotherPage3() {
+            // Replace 'another-page.html' with the path to the HTML page you want to navigate to
+            window.location.href = 'mouse.html';
+        }
+
+        function initializeTracking() {
+            reset();
+            document.getElementById("clickButton").addEventListener("click", startTimer);
+            document.getElementById("clickButton").addEventListener("click", startTimer);
+            createChart();
+            displayHighestScore(); // Display the highest score when initializing tracking
+            document.getElementById("againButton").style.display = 'none';
+        }
+
+        function startTimer() {
+            if (!timerStarted) {
+                timerStarted = true;
+                const selectedTime = parseInt(document.getElementById("timeInterval").value);
+                clickCount = 0;
+                timeLeft = selectedTime;
+                updateTimerDisplay();
+                startTime = Date.now();
+                interval = setInterval(updateTimer, 10);
+            }
+            countClick();
+        }
+
+        function reset() {
+            clearInterval(interval);
+            clickCount = 0;
+            timeLeft = 0;
+            clickTimes = [];
+            updateClickCountDisplay();
+            updateTimerDisplay();
+            document.getElementById("clickButton").style.display = 'inline-block';
+            document.getElementById("clickButton").removeEventListener("click", startTimer);
+            document.getElementById("clickButton").addEventListener("click", startTimer);
+            timerStarted = false;
+            if (chart) {
+                chart.destroy();
+            }
+            document.getElementById('progressBar').style.width = '100%';
+            document.getElementById('progressBar').style.backgroundColor = '#4CAF50';
+            document.getElementById("againButton").style.display = 'none';
+            document.getElementById("resultMessage").style.display = 'none';
+        }
+
+        function countClick() {
+            clickCount++;
+            clickTimes.push((Date.now() - startTime) / 1000);
+            updateClickCountDisplay();
+            updateChart();
+            animateClickCounter();
+            updateProgressBar(); // Add this line to update progress bar when a click occurs
+        }
+
+        function animateClickCounter() {
+            const clickCounter = document.getElementById("clickCounter");
+            clickCounter.style.color = "orange";
+            clickCounter.style.fontSize = "30px";
+            clickCounter.style.transform = "scale(1.2)";
+            setTimeout(function() {
+                clickCounter.style.color = "#333";
+                clickCounter.style.fontSize = "24px";
+                clickCounter.style.transform = "scale(1)";
+            }, 200);
+        }
+
+        function updateClickCountDisplay() {
+            document.getElementById("clickCounter").innerText = `Clicks: ${clickCount}`;
+        }
+
+        function updateTimer() {
+            timeLeft -= 0.01;
+            updateTimerDisplay();
+            updateProgressBar();
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                displayResult();
+                alert("Time's up!"); // Add alert when time is up
+                document.getElementById("clickButton").style.display = 'none';
+                document.getElementById("againButton").style.display = 'inline-block';
+                updateHighestScore(); // Update the highest score when time is up
+            }
+        }
+
+        function updateTimerDisplay() {
+            document.getElementById("timeLeft").innerText = `Time left: ${timeLeft.toFixed(2)} seconds`;
+        }
+
+        function updateProgressBar() {
+            const selectedTime = parseInt(document.getElementById("timeInterval").value);
+            const progressPercentage = (timeLeft / selectedTime) * 100;
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = `${progressPercentage}%`;
+            const red = 255;
+            const green = Math.floor(255 * (progressPercentage / 100));
+            const blue = 0;
+            progressBar.style.backgroundColor = `rgb(${red},${green},${blue})`;
+        }
+
+        function displayResult() {
+            const resultMessage = document.getElementById("resultMessage");
+            const score = calculateScore(clickCount);
+            const message = getMessage(score);
+            resultMessage.innerText = `You've clicked ${clickCount} times! ${message}`;
+            resultMessage.style.display = 'block';
+        }
+document.getElementById("clickButton").addEventListener("click", function(event) {
+    var xPos = event.clientX - this.offsetLeft;
+    var yPos = event.clientY - this.offsetTop;
+    
+    var bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.style.left = xPos + 'px';
+    bubble.style.top = yPos + 'px';
+    
+    this.appendChild(bubble);
+    
+    setTimeout(function() {
+        bubble.remove();
+    }, 500); // Adjust this value to match the duration of the bubble animation
+    
+    // Remove the "Click Here" text from the button
+    var clickText = document.getElementById("clickText");
+    if (clickText) {
+        clickText.remove();
+    }
+});
+
+
+
+        function calculateScore(clickCount) {
+            if (clickCount <= 5) {
+                return "sloth";
+            } else if (clickCount <= 10) {
+                return "moderate";
+            } else if (clickCount <= 20) {
+                return "squirrel";
+            } else if (clickCount <= 40) {
+                return "cat";
+            } else {
+                return "cheetah";
+            }
+        }
+
+        function getMessage(score) {
+            switch (score) {
+                case "sloth":
+                    return "As fast as a sloth on a lazy Sunday";
+                case "moderate":
+                    return "Moderately eager, but still waiting for coffee";
+                case "squirrel":
+                    return "Zooming like a caffeinated squirrel";
+                case "cat":
+                    return "Faster than a cat chasing a laser pointer";
+                case "cheetah":
+                    return "Lightning Fast! You're clicking like a caffeinated cheetah!";
+                default:
+                    return "Congratulations! You've clicked a lot!";
+            }
+        }
+
+        function createChart() {
+            const ctx = document.getElementById('clickChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Click Count',
+                        data: [],
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        borderWidth: 1,
+                        pointRadius: 0,
+                    }]
+                },
+                options: {
+                    animation: {
+                        duration: 1000,
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Time (s)'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Clicks: ${context.parsed.y}`;
+                                }
+                            }
+                        },
+                        legend: {
+                            display: true,
+                            labels: {
+                                usePointStyle: true
+                            },
+                            onClick: function(event, legendItem) {
+                                var index = legendItem.datasetIndex;
+                                var ci = this.chart;
+                                var meta = ci.getDatasetMeta(index);
+                                meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
+                                ci.update();
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart() {
+            chart.data.labels = clickTimes;
+            chart.data.datasets[0].data.push(clickCount);
+            chart.update();
+        }
+
+        function updateHighestScore() {
+            const selectedTime = parseInt(document.getElementById("timeInterval").value);
+            const highestScore = localStorage.getItem(`highestScore_${selectedTime}`);
+            if (highestScore === null || clickCount > highestScore) {
+                localStorage.setItem(`highestScore_${selectedTime}`, clickCount);
+                displayHighestScore();
+                if (highestScore !== null) {
+                    alert("New record created!"); // Display alert for new record
+                }
+            }
+        }
+
+        function displayHighestScore() {
+            const selectedTime = parseInt(document.getElementById("timeInterval").value);
+            const highestScore = localStorage.getItem(`highestScore_${selectedTime}`) || 0;
+            document.getElementById("highestScore").innerText = `Highest Score: ${highestScore}`;
+        }
+    </script>
+</body>
+</html>

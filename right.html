@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>  
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-H31M2BE30M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-H31M2BE30M');
+</script>  
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mouse Click Tracker</title>
+<link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #1c1b1b;
+        color: #333;
+        text-align: center;
+        padding: 20px;
+    }
+    #clickChartContainer {
+        max-width: 60%;
+        margin: auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+        background: linear-gradient(to bottom right, #ffffff, #f0f0f0);
+        text-align: center;
+    }
+    h1 {
+        color: #313631;
+        animation: fadeIn 1s ease-in-out;
+    }
+    p, select, button {
+        font-size: 18px;
+        margin: 10px 0;
+    }
+    p{
+        color: #1c1b1b;
+    }
+    select, button {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+    }
+    select {
+        background-color: #ddd;
+        color: #333;
+    }
+    button {
+        background-color: #4CAF50;
+        color: white;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    #clickButton {
+        padding: 60px 90px;
+        font-size: 24px;
+        background-color: #2f322feb;
+        color: white;
+        border: none;
+        position: relative;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    }
+    #clickButton:hover {
+        background-color: #333b34;
+        transform: scale(1.05);
+    }
+    #clickButton:active {
+        transform: scale(0.95);
+    }
+    #timeLeft {
+        font-size: 22px;
+        color: #d9534f;
+        margin-top: 20px;
+    }
+    #progressBarContainer {
+        width: 100%;
+        height: 20px;
+        background-color: #ddd;
+        border-radius: 5px;
+        margin-top: 20px;
+        overflow: hidden;
+    }
+    #progressBar {
+        width: 100%;
+        height: 20px;
+        background-color: #4CAF50;
+        border-radius: 5px;
+        transition: width 0.01s linear, background-color 0.5s ease;
+    }
+    #againButton {
+        display: none;
+        margin-top: 20px;
+        background-color: #f82500;
+        color: white;
+    }
+    #againButton:hover {
+        background-color: #99a0a8;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    #clickCounter {
+        font-size: 24px;
+        margin-top: 10px;
+        transition: font-size 0.2s ease-in-out, transform 0.2s ease-in-out, color 0.2s ease-in-out;
+    }
+    #resultMessage {
+        font-size: 36px;
+        color: #5a8082;
+        display: none;
+    }
+    #highestScore {
+        font-size: 20px;
+        margin-top: 10px;
+        color: #5a8082;
+    }
+    .newRecord {
+        font-weight: bold;
+        color: #4CAF50;
+    }
+    .right-click-icon {
+            font-size: 24px; /* Adjust size as needed */
+            color: #333; /* Adjust color as needed */
+            margin-right: 50%;
+            cursor: pointer; /* Add cursor pointer */
+        }
+        .right-click-icon {
+            width: 24px; /* Adjust width as needed */
+            height: 24px; /* Adjust height as needed */
+            margin-right: 80%;
+            cursor: pointer; /* Add cursor pointer */
+        }
+</style>
+</head>
+<body onload="initializeTracking()">
+    <div id="clickChartContainer">
+        <img src="left.png" alt="Right Click" class="right-click-icon" title="Right Click" onclick="redirectToAnotherPage()">
+        <h1>Mouse Click Tracker</h1>
+        <p>First set time between 1, 5, 10, 20, or 60 seconds:</p>
+        <select id="timeInterval">
+            <option value="1">1 second</option>
+            <option value="5" selected>5 seconds</option>
+            <option value="10">10 seconds</option>
+            <option value="20">20 seconds</option>
+            <option value="60">60 seconds</option>
+        </select>
+        <button onclick="initializeTracking()">➊ Set</button>
+        <p id="clickCounter">CPS: 0</p>
+        <div id="progressBarContainer">
+            <div id="progressBar"></div>
+        </div>
+        
+        <p id="timeLeft"></p>
+        <button id="againButton" onclick="initializeTracking()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                <path d="M2.5 9a4.502 4.502 0 0 1 8.498-2.405.5.5 0 0 0 .495-.868A5.502 5.502 0 0 0 1 9.5c0 1.202.388 2.314 1.048 3.226a.5.5 0 0 0 .833-.554A3.501 3.501 0 0 1 2.5 9z"/>
+                <path fill-rule="evenodd" d="M10.354 5.354a.5.5 0 0 0-.708-.708L7.5 7.793V4.5a.5.5 0 0 0-1 0v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 0-1h-3.293l2.146-2.146a.5.5 0 0 0 0-.708z"/>
+            </svg>
+            
+            Restart
+        </button>
+ <button id="clickButton"><span id="clickText">❷ClickHere <img src="right.png" alt="Custom Right Click Icon" style="width: 30px; height: 30px;">
+            </span></button>
+        </button>
+        
+        
+        <p id="resultMessage"></p>
+        <canvas id="clickChart" width="50" height="25"></canvas>
+        <p id="highestScore">Highest Score: 0</p>
+       </div>
+     <p>Mouse clicks are essential for interacting with computers. The left click is the primary button used for selecting items, opening files, and interacting with software. It’s straightforward and intuitive. The right click, on the other hand, opens context menus offering additional options like copy, paste, or properties, which are context-specific and provide shortcuts to advanced functions. Understanding and using both clicks efficiently enhances productivity and user experience. For developers, recognizing these interactions is crucial for creating intuitive and user-friendly applications that respond appropriately to different types of user input.</p>
+    
+    
+    <script>
+        let rightClickCount = 0;
+        let interval;
+        let timeLeft;
+        let clickTimes = [];
+        let startTime;
+        let chart;
+        let timerStarted = false;
+
+        function redirectToAnotherPage() {
+            // Replace 'another-page.html' with the path to the HTML page you want to navigate to
+            window.location.href = 'index.html';
+        }
+
+        function initializeTracking() {
+            reset();
+            document.getElementById("clickButton").addEventListener("contextmenu", startTimer);
+            document.getElementById("clickButton").addEventListener("contextmenu", startTimer
+            );
+            createChart();
+            displayHighestScore(); // Display the highest score when initializing tracking
+            document.getElementById("againButton").style.display = 'none';
+        }
+
+        function startTimer(event) {
+            event.preventDefault(); // Prevent the default action of the right-click event
+            if (!timerStarted) {
+                timerStarted = true;
+                const selectedTime = parseInt(document.getElementById("timeInterval").value);
+                rightClickCount = 0;
+                timeLeft = selectedTime;
+                updateTimerDisplay();
+                startTime = Date.now();
+                interval = setInterval(updateTimer, 10);
+            }
+            countClick();
+        }
+
+        function reset() {
+            clearInterval(interval);
+            rightClickCount = 0;
+            timeLeft = 0;
+            clickTimes = [];
+            updateClickCountDisplay();
+            updateTimerDisplay();
+            document.getElementById("clickButton").style.display = 'inline-block';
+            document.getElementById("clickButton").removeEventListener("contextmenu", startTimer);
+            document.getElementById("clickButton").addEventListener("contextmenu", startTimer);
+            timerStarted = false;
+            if (chart) {
+                chart.destroy();
+            }
+            document.getElementById('progressBar').style.width = '100%';
+            document.getElementById('progressBar').style.backgroundColor = '#4CAF50';
+            document.getElementById("againButton").style.display = 'none';
+            document.getElementById("resultMessage").style.display = 'none';
+        }
+
+        function countClick() {
+            rightClickCount++;
+            clickTimes.push((Date.now() - startTime) / 1000);
+            updateClickCountDisplay();
+            updateChart();
+            animateClickCounter();
+            updateProgressBar(); // Add this line to update progress bar when a click occurs
+        }
+
+        function animateClickCounter() {
+            const clickCounter = document.getElementById("clickCounter");
+            clickCounter.style.color = "orange";
+            clickCounter.style.fontSize = "30px";
+            clickCounter.style.transform = "scale(1.2)";
+            setTimeout(function() {
+                clickCounter.style.color = "#333";
+                clickCounter.style.fontSize = "24px";
+                clickCounter.style.transform = "scale(1)";
+            }, 200);
+        }
+
+        function updateClickCountDisplay() {
+            document.getElementById("clickCounter").innerText = `Right Clicks: ${rightClickCount}`;
+        }
+
+        function updateTimer() {
+            timeLeft -= 0.01;
+            updateTimerDisplay();
+            updateProgressBar();
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                displayResult();
+                alert("Time's up!"); // Add alert when time is up
+                document.getElementById("clickButton").style.display = 'none';
+                document.getElementById("againButton").style.display = 'inline-block';
+                updateHighestScore(); // Update the highest score when time is up
+            }
+        }
+
+        function updateTimerDisplay() {
+            document.getElementById("timeLeft").innerText = `Time left: ${timeLeft.toFixed(2)} seconds`;
+        }
+
+        function updateProgressBar() {
+            const selectedTime = parseInt(document.getElementById("timeInterval").value);
+            const progressPercentage = (timeLeft / selectedTime) * 100;
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = `${progressPercentage}%`;
+            const red = 255;
+            const green = Math.floor(255 * (progressPercentage / 100));
+            const blue = 0;
+            progressBar.style.backgroundColor = `rgb(${red},${green},${blue})`;
+        }
+
+        function displayResult() {
+            const resultMessage = document.getElementById("resultMessage");
+            const score = calculateScore(rightClickCount);
+            const message = getMessage(score);
+            resultMessage.innerText = `You've clicked ${rightClickCount} times! ${message}`;
+            resultMessage.style.display = 'block';
+        }
+
+        function calculateScore(clickCount) {
+            if (clickCount <= 5) {
+                return "sloth";
+            } else if (clickCount <= 10) {
+                return "moderate";
+            } else if (clickCount <= 20) {
+                return "squirrel";
+            } else if (clickCount <= 40) {
+                return "cat";
+            } else {
+                return "cheetah";
+            }
+        }
+
+        function getMessage(score) {
+            switch (score) {
+                case "sloth":
+                    return "As fast as a sloth on a lazy Sunday";
+                case "moderate":
+                    return "Moderately eager, but still waiting for coffee";
+                case "squirrel":
+                    return "Zooming like a caffeinated squirrel";
+                case "cat":
+                    return "Faster than a cat chasing a laser pointer";
+                case "cheetah":
+                    return "Lightning Fast! You're clicking like a caffeinated cheetah!";
+                default:
+                    return "Congratulations! You've clicked a lot!";
+            }
+        }
+
+        function createChart() {
+            const ctx = document.getElementById('clickChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Click Count',
+                        data: [],
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        borderWidth: 1,
+                        pointRadius: 0,
+                    }]
+                },
+                options: {
+                    animation: {
+                        duration: 1000,
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Time (s)'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Clicks: ${context.parsed.y}`;
+                                }
+                            }
+                        },
+                        legend: {
+                            display: true,
+                            labels: {
+                                usePointStyle: true
+                            },
+                            onClick: function(event, legendItem) {
+                                var index = legendItem.datasetIndex;
+                                var ci = this.chart;
+                                var meta = ci.getDatasetMeta(index);
+                                meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
+                                ci.update();
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart() {
+            chart.data.labels = clickTimes;
+            chart.data.datasets[0].data.push(rightClickCount);
+            chart.update();
+        }
+
+        function updateHighestScore() {
+            const selectedTime = parseInt(document.getElementById("timeInterval").value);
+            const highestScore = localStorage.getItem(`highestScore_${selectedTime}`);
+            if (highestScore === null || rightClickCount > highestScore) {
+                localStorage.setItem(`highestScore_${selectedTime}`, rightClickCount);
+                displayHighestScore();
+                if (highestScore !== null) {
+                    alert("New record created!"); // Display alert for new record
+                }
+            }
+        }
+
+        function displayHighestScore() {
+            const selectedTime = parseInt(document.getElementById("timeInterval").value);
+            const highestScore = localStorage.getItem(`highestScore_${selectedTime}`) || 0;
+            document.getElementById("highestScore").innerText = `Highest Score: ${highestScore}`;
+        }
+    </script>
+</body>
+</html>
